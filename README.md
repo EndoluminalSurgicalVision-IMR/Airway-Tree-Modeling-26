@@ -1,5 +1,7 @@
 # Airway Tree Modeling 2026 (ATM26) Challenge Benchmark
 
+[![License](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
+
 ![Challenge Banner](assets/Banner-20260613-v3.png)
 
 Building on the success of [ATM22 challenge](https://github.com/EndoluminalSurgicalVision-IMR/ATM-22-Related-Work), we further extend the airway tree modeling domain toward anatomical labeling and endobronchial intervention.
@@ -17,5 +19,7 @@ We provide a baseline model and a detailed docker tutorial. Please refer to [Bas
 The evaluation code can be found in.
 
 ## TODOs
+- [ ] Upload baseline weights and nnUNet docker image 
+- [ ] Prepare the release of Track-3
 
 ## Related Works
