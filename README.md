@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 
-![Challenge Banner](assets/Banner-20260613-v3.png)
+![Challenge Banner](assets/logo_v6_01.png)
 
 Building on the success of [ATM22](https://github.com/EndoluminalSurgicalVision-IMR/ATM-22-Related-Work) challenge, [ATM26](https://atm26.grand-challenge.org/) extends airway tree modeling from binary segmentation to structured airway understanding, supporting clinically meaningful airway segmentation and branch-wise anatomical labeling, as well as endobronchial intervention.
 
