@@ -1,8 +1,10 @@
 ## Baseline and Submission Guideline
 
-![Challenge Banner](../assets/Banner-20260613-v3.png)
+![Challenge Banner](../assets/logo_v6_01.png)
 
 We provide the official example algorithm and our baseline algorithm in this directory. Participants are expected to pack their own solutions, configure their docker image correctly and then build the docker image.
+
+Baseline checkpoints can be found on [Huggingface](https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines). You can download and replace the corresponding files and folders.
 
 ### Track-1: Binary Airway Segmentation
 An example algorithm for Track-1 can be found under `T1_example_algorithm`. It defines the I/O interface for accessing lung CT images on Grand Challenge platform.
