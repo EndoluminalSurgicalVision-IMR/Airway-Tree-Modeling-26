@@ -1,0 +1,18 @@
+[
+    {
+        "socket": {
+            "slug": "lung-ct",
+            "relative_path": "images/lung-ct",
+            "is_image_kind": true,
+            "is_panimg_kind": true,
+            "is_dicom_image_kind": false,
+            "is_json_kind": false,
+            "is_file_kind": false
+        },
+        "file": null,
+        "image": {
+            "name": "ATM_039_0000.mha"
+        },
+        "value": null
+    }
+]
