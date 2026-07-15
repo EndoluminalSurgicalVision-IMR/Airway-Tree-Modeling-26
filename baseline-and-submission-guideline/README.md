@@ -6,6 +6,11 @@ We provide the official example algorithm and our baseline algorithm in this dir
 
 Baseline checkpoints can be found on [Huggingface](https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines). You can download and replace the corresponding files and folders.
 
+If you would like to use the nnUNet docker, you can pull from Docker Hub:
+```bash
+docker pull kkdls19/atm26-nnunetv2:2.6.4
+```
+
 ### Track-1: Binary Airway Segmentation
 An example algorithm for Track-1 can be found under `T1_example_algorithm`. It defines the I/O interface for accessing lung CT images on Grand Challenge platform.
 

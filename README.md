@@ -19,7 +19,7 @@ We provide a baseline model and a detailed docker tutorial. Please refer to [Bas
 The evaluation code can be found in [Evaluation](evaluation/README.md).
 
 ## TODOs
-- [ ] Upload baseline weights and nnUNet docker image
+- [x] Upload baseline weights and nnUNet docker image
 - [ ] Prepare evaluation README
 - [ ] Prepare the release of Track-3
 
