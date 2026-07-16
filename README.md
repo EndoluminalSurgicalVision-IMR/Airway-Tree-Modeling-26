@@ -1,4 +1,5 @@
-# Airway Tree Modeling 2026 (ATM26) Challenge Benchmark
+# Airway Tree Modeling for Endobronchial Surgery 2026 (ATM'26) Challenge Benchmark
+
 
 [![License](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 
