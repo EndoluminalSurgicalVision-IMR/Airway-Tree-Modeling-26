@@ -92,7 +92,7 @@ def process_interf0(job):
     )
     result = {
         "case": case_id,
-        "DSC": dice_coefficient(prediction_lcc, label),
+        "DSC": dice_coefficient(prediction_raw, label),
         "clDice": cl_dice(prediction_raw, label, skeleton),
         "TLD": tree_length_detected(prediction_lcc, skeleton),
         "BD": bd,

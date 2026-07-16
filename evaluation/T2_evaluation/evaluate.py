@@ -109,20 +109,27 @@ def process_lung_ct(job):
         case_id=case_id,
     )
 
-    prediction = keep_largest_component(prediction_raw)
-    num_classes = max(int(label.max()), int(prediction.max()), MAX_CLASS_LABEL) + 1
+    prediction_lcc = keep_largest_component(prediction_raw)
+    num_classes = max(
+        int(label.max()), int(prediction_raw.max()), MAX_CLASS_LABEL
+    ) + 1
 
     gt_label = project_image_to_nodes(label, parsing, node_num, num_classes)
-    pred_label = project_image_to_nodes(prediction, parsing, node_num, num_classes)
+    pred_label = project_image_to_nodes(
+        prediction_lcc,
+        parsing,
+        node_num,
+        num_classes,
+    )
     valid = gt_label != BACKGROUND_LABEL
 
     spd = build_spd(edges)
     mask_top = build_mask_top(edges)
     accuracy, f1, _ = compute_acc_f1(gt_label, pred_label, valid)
     distance_matrix, distance_max = build_class_distance_matrix(MAX_CLASS_LABEL)
-    mean_dice, dice_per_class = multi_class_dice(prediction, label)
+    mean_dice, dice_per_class = multi_class_dice(prediction_raw, label)
     mean_cldice, cldice_per_class = multi_class_cldice(
-        prediction,
+        prediction_raw,
         label,
         skeleton,
     )
