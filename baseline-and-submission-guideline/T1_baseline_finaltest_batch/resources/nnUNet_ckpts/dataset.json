@@ -1,0 +1,15 @@
+{
+    "channel_names": {
+        "0": "CT"
+    },
+    "labels": {
+        "background": 0,
+        "airway": 1
+    },
+    "numTraining": 299,
+    "file_ending": ".nii.gz",
+    "licence": "Whoever converted this dataset was lazy and didn't look it up!",
+    "converted_by": "Please enter your name, especially when sharing datasets with others in a common infrastructure!",
+    "name": "ATM26_Track1",
+    "description": "This is a dataset for the ATM26 challenge Track 1: Binary Airway Segmentation, where the training split is used for training and evaluation. It contains 299 cases with binary airway labels."
+}

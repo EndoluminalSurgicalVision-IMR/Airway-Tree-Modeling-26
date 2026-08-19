@@ -1,0 +1,61 @@
+# Slim ATM26 nnU-Net v2.6.4 environment image for CUDA 11.8.
+#
+# The FAT trap to avoid: installing requirements through a PyPI mirror lets
+# the resolver pick the DEFAULT torch wheels (cu124) and stack a second
+# torch on top of the base's — the cu118 image blew up to 17.5GB that way
+# (official kkdls19 build: 7.12GB). This recipe installs torch from the
+# official cu118 wheel index FIRST, so every later dependency resolves
+# against it. Also starts from the minimal nvidia/cuda runtime instead of
+# the conda-bundled pytorch/pytorch image.
+FROM nvidia/cuda:11.8.0-runtime-ubuntu22.04
+
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/home/user/.local/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+ENV nnUNet_raw="/opt/nnunet/nnUNet_raw"
+ENV nnUNet_preprocessed="/opt/nnunet/nnUNet_preprocessed"
+ENV nnUNet_results="/opt/nnunet/nnUNet_results"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 python3-pip git && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r user && useradd -m --no-log-init -r -g user user
+
+WORKDIR /opt/app
+
+COPY --chown=user:user ./ /opt/app/
+
+RUN python3 -m pip install --no-cache-dir --upgrade pip
+
+# Torch FIRST, pinned to the cu118 wheel index: later installs must not
+# pull a default-wheel torch. The cu118 wheels bundle their own cuDNN.
+RUN python3 -m pip install --no-cache-dir --no-color \
+    torch==2.5.1+cu118 torchvision==0.20.1+cu118 \
+    --index-url https://download.pytorch.org/whl/cu118
+
+# Keep the cu118 index visible to every later install so torch-family
+# resolution never falls back to the mirror's default cu124 wheels.
+RUN python3 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    python3 -m pip install --no-cache-dir --no-color \
+    --extra-index-url https://download.pytorch.org/whl/cu118 \
+    --requirement /opt/app/requirements.txt
+
+RUN python3 -m pip install \
+    --no-cache-dir \
+    --no-color \
+    --extra-index-url https://download.pytorch.org/whl/cu118 \
+    /opt/app
+
+RUN mkdir -p "${nnUNet_raw}" "${nnUNet_preprocessed}" "${nnUNet_results}" && \
+    chown -R user:user /opt/nnunet
+
+# Ubuntu 22.04 ships only python3; submission entrypoints invoke `python`.
+RUN ln -s /usr/bin/python3 /usr/local/bin/python
+
+USER user
+
+WORKDIR /home/user
+
+CMD ["python"]

@@ -48,3 +48,13 @@ To build and save the docker, you can run:
 cd baseline-and-submission-guideline/T2_baseline
 bash do_save.sh
 ```
+### Final Test Phase (batch execution)
+
+For the Final Test Phase, three additional folders are provided:
+
+- `finaltest_batch_template` — a generic Docker packing template for the ATM26 local evaluation platform's batch contract. On the real Grand-Challenge platform the container receives ONE case and behaves like a standard per-case algorithm; on our ATM26 local inference + evaluation platform it receives the whole test set under `/input` and performs internal sequential inference (model loaded ONCE, per-case loop with explicit GPU-VRAM/memory hygiene).
+- `T1_baseline_finaltest_batch` / `T2_baseline_finaltest_batch` — the official leaderboard baselines repackaged with the batch contract. Prediction code is unchanged from `T1_baseline` / `T2_baseline`; checkpoints come from the same [Huggingface](https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines) locations.
+
+Key batch-contract differences from the per-case baselines: the container reads all `*.mha` files under `/input/images/lung-ct` itself and writes one output per case to `/output/images/<output-slug>/<case-id>.mha`.
+
+**The evaluation platform's GPU driver supports CUDA up to 12.0**; the three finaltest folders build on the slim `atm26-nnunetv2:2.6.4-cuda11.8` base whose Dockerfile is provided in `nnunetv2-base/` (cuda12.4-based images will not run on the platform).

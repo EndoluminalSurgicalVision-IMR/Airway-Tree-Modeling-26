@@ -1,0 +1,8 @@
+kimimaro
+# monai 1.4+ requires torch>=2.6, which does not exist for cu118: pin to a
+# version compatible with the torch 2.5.1+cu118 stack.
+monai==1.3.2
+crackle-codec
+natsort
+fill-voids
+more-itertools
