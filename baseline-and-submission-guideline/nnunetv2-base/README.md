@@ -1,7 +1,7 @@
 # ATM26 nnU-Net v2.6.4 base image — CUDA 11.8 (slim)
 
 Source for the `atm26-nnunetv2:2.6.4-cuda11.8` Docker Hub tag used by the
-Final Test Phase baselines.
+batch baselines (Validation & Final Test phases).
 
 **Why this exists:** the evaluation platform's GPU driver supports CUDA up to
 12.0, so submission images must be built on a CUDA ≤ 12.0 base (cuda12.4

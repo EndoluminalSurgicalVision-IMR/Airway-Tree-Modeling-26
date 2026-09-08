@@ -1,4 +1,4 @@
-"""ATM26 Final Test Phase batch inference template (dual-mode).
+"""ATM26 batch inference template (dual-mode; Validation & Final Test phases).
 
 Behaviour
 ---------
@@ -37,7 +37,7 @@ INPUT_PATH = Path("/input")
 OUTPUT_PATH = Path("/output")
 
 # Track-1: "binary-airway-segmentation"  (binary mask, values {0, 1})
-# Track-2: "multi-class-airway-segmentation" (labels 0..20)
+# Track-2: "multi-class-airway-segmentation" (labels 0..20; class 20 is a real scored branch)
 OUTPUT_SLUG = "multi-class-airway-segmentation"
 MAX_CLASS_LABEL = 20
 

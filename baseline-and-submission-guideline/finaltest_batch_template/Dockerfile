@@ -1,4 +1,4 @@
-# ATM26 Final Test Phase: batch Docker packing template.
+# ATM26 batch Docker packing template (Validation & Final Test phases).
 #
 # Dual-mode: on the real Grand-Challenge platform the container receives ONE
 # case and behaves like a standard per-case algorithm; on the ATM26 local

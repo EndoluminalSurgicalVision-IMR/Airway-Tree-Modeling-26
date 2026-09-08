@@ -1,7 +1,9 @@
-# ATM26 Final Test Phase — Batch Docker Packing Template
+# ATM26 Batch Docker Packing Template (Validation & Final Test phases)
 
-Dual-mode submission template for the ATM26 Final Test Phase. The same image
-works in both environments:
+Dual-mode submission template for the ATM26 **Validation Phase** and **Final Test
+Phase** (the batch contract is identical for both; build the image once and upload
+it to whichever phase you are submitting to). The same image works in both
+environments:
 
 | Environment | What the container sees | Behaviour |
 | --- | --- | --- |
@@ -12,7 +14,7 @@ works in both environments:
 
 1. Set `OUTPUT_SLUG` (and `MAX_CLASS_LABEL`) in `inference.py`:
    - Track-1: `binary-airway-segmentation` (binary mask)
-   - Track-2: `multi-class-airway-segmentation` (labels 0–20)
+   - Track-2: `multi-class-airway-segmentation` (labels 0–20; class 20 is a real scored branch)
 2. Replace `build_predictor()` and `predict_case()` with your model. The
    shipped versions return an all-zero prediction so the template runs out of
    the box.
@@ -38,4 +40,5 @@ bash do_test_run.sh                   # runs against ./test/input -> ./test/outp
 bash do_save.sh                       # writes atm26-batch-template.tar.gz
 ```
 
-The saved `.tar.gz` is what you upload through the ATM26 Test Phase form.
+The saved `.tar.gz` is what you upload through the ATM26 Validation / Final
+Test Phase submission form.

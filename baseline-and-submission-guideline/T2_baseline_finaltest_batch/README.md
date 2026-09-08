@@ -1,6 +1,6 @@
 # T2_baseline_finaltest_batch
 
-The official **Track-2 (branch-wise anatomical labeling)** leaderboard baseline repackaged for the **Final Test Phase** with the ATM26 local evaluation platform's batch contract.
+The official **Track-2 (branch-wise anatomical labeling)** leaderboard baseline repackaged for batch execution on the ATM26 local evaluation platform. The same image serves both the **Validation Phase** and the **Final Test Phase** (identical batch contract; only the phase you upload to differs).
 
 ## What is different from `T2_baseline`
 
@@ -12,6 +12,8 @@ The official **Track-2 (branch-wise anatomical labeling)** leaderboard baseline 
 | Grand-Challenge compatibility | Yes | Yes — with a single case at `/input` the dual-mode wrapper behaves exactly like the per-case baseline |
 
 The prediction core is unchanged: same nnU-Net preprocessing, same GPU patch inference, same low-memory argmax (Track 2). GPU-VRAM/memory hygiene in the loop: `torch.cuda.empty_cache()`, `gc.collect()`, per-case `del` of arrays and images.
+
+**Label scheme note:** the official Track-2 scheme has labels 0–20 (class 20 is a real scored branch), matching the evaluator's `MAX_CLASS_LABEL = 20` bound; predictions may legitimately contain class-20 voxels.
 
 ## Checkpoints
 

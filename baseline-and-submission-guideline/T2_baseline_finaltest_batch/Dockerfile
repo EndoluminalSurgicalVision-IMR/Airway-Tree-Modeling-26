@@ -1,4 +1,5 @@
-# ATM26 Final Test Phase: Track-2 leaderboard baseline, batch wrapper.
+# ATM26 Track-2 leaderboard baseline, batch wrapper (Validation & Final
+# Test phases).
 #
 # Same single-fold nnU-Net baseline as T2_baseline, but declares the
 # org.atm26.batch label: on the ATM26 local evaluation platform the

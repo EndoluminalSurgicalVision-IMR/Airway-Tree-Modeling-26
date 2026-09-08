@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Save the image as a timestamped archive for upload to the test phase.
+# Save the image as a timestamped archive for upload to the ATM26
+# Validation / Final Test phase.
 set -euo pipefail
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 DOCKER_IMAGE_TAG="imr_atm26_track1_leaderboard_baseline_finaltest_batch"

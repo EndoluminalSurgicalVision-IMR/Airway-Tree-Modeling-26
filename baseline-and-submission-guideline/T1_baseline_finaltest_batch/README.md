@@ -1,6 +1,6 @@
 # T1_baseline_finaltest_batch
 
-The official **Track-1 (binary airway segmentation)** leaderboard baseline repackaged for the **Final Test Phase** with the ATM26 local evaluation platform's batch contract.
+The official **Track-1 (binary airway segmentation)** leaderboard baseline repackaged for batch execution on the ATM26 local evaluation platform. The same image serves both the **Validation Phase** and the **Final Test Phase** (identical batch contract; only the phase you upload to differs).
 
 ## What is different from `T1_baseline`
 
