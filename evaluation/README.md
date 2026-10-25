@@ -21,16 +21,19 @@ The following metrics are incorporated into the final ranking:
 2. **F1** — the branch-wise, macro-averaged F1 score of the per-branch anatomical labeling.
 3. **SC** — the Subtree Consistency, the proportion of subtrees with consistent segmental labeling.
 4. **TD** — the Topological Distance between predicted branches and their matched ground-truth nodes.
-5. **Dice** — the multi-class Dice similarity coefficient measuring the voxel-level labeling overlap between the prediction and the reference.
-6. **clDice** — the multi-class skeleton-based (centerline) Dice measuring the voxel-level labeling overlap between the prediction and the reference [1].
+5. **TAcc** — the Tree Accuracy, the branch-wise accuracy weighted by the anatomical distance between the predicted and the reference class.
+6. **Dice** — the multi-class Dice similarity coefficient measuring the voxel-level labeling overlap between the prediction and the reference.
+7. **clDice** — the multi-class skeleton-based (centerline) Dice measuring the voxel-level labeling overlap between the prediction and the reference [1].
 
-The branch-wise ACC and F1 and the subtree-wise SC and TD are measured on the airway graph [2]; for a clinically meaningful airway extraction, only the largest connected component of each predicted segmentation is kept, which is then projected onto the reference airway graph. Dice and clDice are computed as voxel-level multi-class labeling overlap measures.
+The branch-wise ACC, F1 and TAcc and the subtree-wise SC and TD are measured on the airway graph [2]; for a clinically meaningful airway extraction, only the largest connected component of each predicted segmentation is kept, which is then projected onto the reference airway graph. Dice and clDice are computed as voxel-level multi-class labeling overlap measures.
 
 **Branch-wise metrics.** ACC and F1 evaluate the per-branch anatomical labeling against the reference.
 
 **Subtree Consistency (SC).** SC evaluates the proportion of subtrees meeting the segmental consistency criterion, i.e., all nodes in a subtree share the same predicted segmental label. It is computed as the ratio SC = Ncs / Ns, where Ns is the total number of anatomical subtrees and Ncs is the number of consistently labeled subtrees.
 
 **Topological Distance (TD).** TD measures the shortest path length between predicted branches and their corresponding ground-truth subtrees, i.e., the average graph distance between predicted and ground-truth matched nodes. For each of the N nodes in the airway graph, we take the shortest path length d(i, j) from node i to the nearest node j whose ground-truth label equals the predicted label of node i, and TD is the mean of these distances over all nodes.
+
+**Tree Accuracy (TAcc).** TAcc replaces the 0/1 hit of ACC with a graded score over the same valid branch nodes: each node scores 1 − D(pred, gt) / Dmax, where D is the shortest-path distance between the predicted and the reference class in the anatomical taxonomy (trachea → left/right main bronchus → lobe → segmental branch) and Dmax = 6 is the largest distance in that taxonomy, between segments in opposite lungs. A segment confused with a sibling segment of the same lobe therefore still scores 1 − 2/6 ≈ 0.67, one in another lobe of the same lung 1 − 4/6 ≈ 0.33, and one in the opposite lung 0; background and out-of-scheme labels count as maximally distant. TAcc is the mean of these scores, so it rewards anatomically plausible near-misses rather than only exact agreement, is always ≥ ACC, and equals ACC only when every label is either exact or maximally wrong.
 
 ## References
 
