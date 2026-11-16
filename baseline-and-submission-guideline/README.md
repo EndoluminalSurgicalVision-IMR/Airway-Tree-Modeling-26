@@ -66,14 +66,11 @@ the predictions on the host.
 Weights are not committed; each baseline stages them with `download_weights.py`,
 which verifies the fixed SHA-256. See [RESOURCES_Track3.md](RESOURCES_Track3.md).
 
-**Label guide.** The task uses 32 classes: 13 proximal airway classes and 19
-segmental classes, defined in [assets/label_schema.json](assets/label_schema.json)
-and illustrated in [Track3_Label_Guide.md](Track3_Label_Guide.md). ID `0` is a
-real class (LB1+2), not background; ID `18` is unused; a segment label is the
-union of all annotated branches of that segment; anatomical variation may leave
-a class absent in a case but never adds a class.
-
-![All 32 airway labels](assets/airway_all_labels.png)
+**Labels.** Predictions use the fixed 32-class schema (13 proximal and 19
+segmental classes) shipped as `label_schema.json` in every algorithm directory:
+ID `0` is a real class (LB1+2), not background, and ID `18` is unused. The
+illustrated label guide is published on the challenge website:
+<https://journey1234-liu.github.io/atm26/#/tracks>.
 
 **Container contract** (Track 3 has its own I/O paths — not the CT ones):
 

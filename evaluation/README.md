@@ -37,8 +37,10 @@ The branch-wise ACC, F1 and TAcc and the subtree-wise SC and TD are measured on 
 
 ## Track-3: Landmark Recognition for Endobronchial Intervention
 
-Track 3 predicts one anatomical landmark per bronchoscopy frame (32 classes,
-see [../baseline-and-submission-guideline/Track3_Label_Guide.md](../baseline-and-submission-guideline/Track3_Label_Guide.md)).
+Track 3 predicts one anatomical landmark per bronchoscopy frame, using the
+fixed 32-class schema shipped as `label_schema.json` in every algorithm
+directory. The illustrated label guide is on the challenge website:
+<https://journey1234-liu.github.io/atm26/#/tracks>.
 The final ranking is the **mean rank position** across the following four
 metrics (each ranked independently; ties receive the average rank):
 
@@ -55,8 +57,24 @@ metrics (each ranked independently; ties receive the average rank):
    reference segments with temporal IoU ≥ 0.5.
 
 The implementation of all four metrics, with the per-metric definitions and
-edge cases, is in [`T3_evaluation/`](T3_evaluation/) — `evaluate.py` is the
-official entry point, and `SCORING.md` documents the scoring protocol.
+edge cases, is in [`T3_evaluation/`](T3_evaluation/): `evaluate.py` is the
+official entry point and `SCORING.md` documents the scoring protocol.
+
+The scorer runs on the host in plain Python (no evaluation Docker, no extra
+packages) and reads the predictions plus the private ground truth:
+
+```bash
+python evaluate.py --predictions-root /path/to/docker_output \
+  --gt-root /path/to/private_gt --output-root /path/to/scores
+python rank.py --reports /path/to/trusted_reports --output /path/to/leaderboard
+```
+
+Validation and test use the same command with different host paths. The four
+host paths in `paths.example.json` can be edited directly; `/input` and
+`/output` inside the container are a fixed interface, not host paths.
+`prepare_data.py` prepares the existing ATM data, and `run_submission.py` /
+`run_from_config.py` are optional host-side Docker wrappers for the organizers —
+participants never submit them.
 
 ## References
 
