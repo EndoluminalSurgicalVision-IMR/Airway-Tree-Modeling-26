@@ -1,5 +1,5 @@
 # Evaluation
-The ATM'26 challenge aims at extracting accurate binary airway segmentation (Track-1) and accurate branch-wise airway anatomical labeling (Track-2). For each track, the final ranking is determined by the **mean rank position** of a submission across all the ranking metrics described below.
+The ATM'26 challenge aims at extracting accurate binary airway segmentation (Track-1), accurate branch-wise airway anatomical labeling (Track-2), and accurate frame-level anatomical landmark recognition from bronchoscopy sequences (Track-3). For each track, the final ranking is determined by the **mean rank position** of a submission across all the ranking metrics described below.
 
 ## Track-1: Binary Airway Segmentation
 
