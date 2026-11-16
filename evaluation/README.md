@@ -73,8 +73,8 @@ Validation and test use the same command with different host paths. The four
 host paths in `paths.example.json` can be edited directly; `/input` and
 `/output` inside the container are a fixed interface, not host paths.
 `prepare_data.py` prepares the existing ATM data, and `run_submission.py` /
-`run_from_config.py` are optional host-side Docker wrappers for the organizers —
-participants never submit them.
+`run_from_config.py` are optional host-side Docker wrappers for local end-to-end
+runs; the submission itself is only the image.
 
 ## References
 

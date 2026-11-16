@@ -1,4 +1,4 @@
-"""Dependency-free organizer scoring; all IDs, including zero, are real classes."""
+"""Dependency-free host-side scoring; all IDs, including zero, are real classes."""
 import csv,json,re
 from pathlib import Path
 from statistics import mean
@@ -79,7 +79,7 @@ def evaluate(predictions,ground_truth,schema,transition_graph=None):
     if not predictions.is_dir() or {p.name for p in predictions.iterdir()}!=expected:raise ValueError('Missing/extra output files or directories')
     legal=None
     if transition_graph:
-        if transition_graph.get('reviewed') is not True:raise ValueError('Only organizer-reviewed transition graphs may be used')
+        if transition_graph.get('reviewed') is not True:raise ValueError('Only reviewed transition graphs may be used')
         legal={(v,v) for v in ids}
         for a,b in transition_graph['edges']:
             if a not in allowed or b not in allowed:raise ValueError('Unknown topology node')

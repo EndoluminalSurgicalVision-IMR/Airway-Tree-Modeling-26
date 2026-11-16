@@ -1,7 +1,6 @@
 # Track 3 scoring and ranking rules v1
 
-As requested by the organizers, this version ranks submissions by the mean rank
-over several metrics. The four metrics below are implemented as host-side Python
+This version ranks submissions by the mean rank over several metrics. The four metrics below are implemented as host-side Python
 scoring; they were validated on small samples of both the validation and test
 paths, and regression-checked against the existing full-test predictions.
 The machine-readable policy is in [policy.json](policy.json); the label set is
@@ -73,8 +72,8 @@ Both are common temporal-segmentation metrics; the definitions follow
    be recomputed. Reports from different challenge phases or different test sets
    must never be mixed.
 
-The leaderboard only reads trusted JSON produced by the organizers' host scoring
-script, never metrics entered by participants. Validation and test are ranked
+The leaderboard only uses JSON produced by the official host-side scorer, never
+metrics entered by participants. Validation and test are ranked
 separately and their reports are never mixed.
 
 ## Output errors and auxiliary diagnostics
@@ -87,11 +86,11 @@ cases. `0=LB1+2` is a normal class; `18` is unused.
 
 The evaluation report keeps per-sequence and per-case metrics plus the number of
 prediction/ground-truth transitions; "fewer transitions is better" is not a
-ranking rule. Counting illegal transitions needs an organizer-reviewed
-connectivity graph; when it is absent the count is `null`, not 0. The template
+ranking rule. Counting illegal transitions needs a reviewed connectivity graph;
+when it is absent the count is `null`, not 0. The template
 `transition_graph.template.json` defaults to `reviewed=false` and must not be
 enabled as is.
-The review must consider the 32 classes, forward/backward motion and missing
+A reviewed graph must cover the 32 classes, forward/backward motion and missing
 annotations at boundaries; this diagnostic does not participate in ranking.
 
 The evaluator leaves predictions untouched: no smoothing, no Viterbi, no

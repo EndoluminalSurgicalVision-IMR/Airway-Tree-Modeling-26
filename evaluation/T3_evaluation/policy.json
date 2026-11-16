@@ -1,6 +1,6 @@
 {
   "version": "track3-ranking-v1",
-  "status": "organizer_selected_implementation",
+  "status": "official_implementation",
   "ranking_method": "mean_metric_rank",
   "metrics": ["frame_macro_f1", "frame_accuracy", "sequence_edit", "segment_f1_50"],
   "directions": ["higher", "higher", "higher", "higher"],
@@ -11,6 +11,6 @@
   "temporal_aggregation": "mean within each patient, then equal mean over patients",
   "segment_iou_threshold": 0.5,
   "invalid_submission": "reject_entire_submission; exclude_from_ranking",
-  "transition_errors": "diagnostic_only; require organizer-reviewed topology; otherwise null",
+  "transition_errors": "diagnostic_only; require reviewed topology; otherwise null",
   "platform_publication": "host_scoring_ready; local_platform_path_configuration_and_rehearsal_pending"
 }

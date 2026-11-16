@@ -53,8 +53,8 @@ Track 3 moves from CT volumes to the endobronchial view. A case is a rendered
 bronchoscopy sequence along the airway tree, and every frame carries the
 anatomical landmark visible at that moment. Participants submit **one
 self-contained inference container** that reads PNG sequences and writes a
-per-frame label CSV; the organizers mount the data, run the container and score
-the predictions on the host.
+per-frame label CSV. The container runs offline and only writes the CSV files;
+the predictions are then scored on the host with the official scorer.
 
 An example algorithm for Track-3 can be found under `T3_example_algorithm`. It
 is standard-library only, writes the constant label 0, and defines the I/O
@@ -71,11 +71,13 @@ skeleton with a small JSON placeholder: replace `build_predictor` and
 `predict_case` with your own method, keep the I/O paths and the label schema. It
 is not another official baseline.
 
-The checkpoints are not committed to Git. Stage them in either baseline
-directory with `download_weights.py` (`--source` for a local copy, `--url` for
-the published file); the script verifies the fixed SHA-256. See
-[RESOURCES_Track3.md](RESOURCES_Track3.md) for the checksum, the image
-distribution and what is deliberately excluded from the repository.
+The baseline checkpoint is published on Hugging Face together with the
+Track 1 and Track 2 baselines:
+[Hugging Face](https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines). Stage it in either baseline directory with
+`download_weights.py`, which fetches the file and verifies the fixed SHA-256
+(`--source` stages an existing local copy instead). See
+[RESOURCES_Track3.md](RESOURCES_Track3.md) for the checksum and the image
+distribution.
 
 Please carefully configure the `Dockerfile` before docker image saving and
 testing. Track-3 images must declare `LABEL org.atm26.batch="1"` and

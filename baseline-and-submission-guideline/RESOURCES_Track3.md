@@ -6,28 +6,31 @@ distributed separately, the same way as for Track 1 and Track 2.
 ### Weights
 
 Both Track-3 baselines (`T3_baseline/`, `T3_baseline_finaltest_batch/`) use the
-same CLIP+MLP checkpoint:
+same CLIP+MLP checkpoint, published on Hugging Face together with the Track 1
+and Track 2 baselines:
+
+<https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines>
 
 ```
-resources/clip_mlp/checkpoint.pt
+T3_baseline/resources/clip_mlp/checkpoint.pt
 SHA-256 2cc20ae3ca7a0aa86bba708fc9e0d7da68fc78aff2f5d780ffc6790d514d04fe
+600,290,227 bytes
 ```
 
-The checkpoint is **not** committed. Stage it with the download script in
-either baseline directory, which verifies the SHA-256 and refuses to overwrite
-a different file:
+The checkpoint is distributed through Hugging Face rather than Git. Fetch it
+into either baseline directory with:
 
 ```bash
 cd baseline-and-submission-guideline/T3_baseline
-python download_weights.py --url 'https://<published-host>/path/checkpoint.pt'
+python download_weights.py                    # Hugging Face, SHA-256 verified
+python download_weights.py --source /path/to/checkpoint.pt   # offline copy
 ```
 
-`--source /path/to/checkpoint.pt` works for an offline copy. The example
-algorithm and the batch template ship a small JSON placeholder and need no
-network weights at all.
-
-Do not substitute the older 27-class checkpoint: the label schema of this
-track has 32 classes.
+The script verifies the digest and refuses to overwrite a different file. Do not
+substitute the older 27-class checkpoint: the label schema of this track has 32
+classes. The prebuilt images already contain the checkpoint, so a container run
+needs no download and no network access. The example algorithm and the batch
+template ship a small JSON placeholder and need no weights at all.
 
 ### Images
 

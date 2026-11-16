@@ -1,4 +1,4 @@
-"""Equal-weight mean ranks over the four organizer-selected metrics."""
+"""Equal-weight mean ranks over the four ranking metrics."""
 import argparse,csv,json,math
 from pathlib import Path
 from scoring import safe_id
