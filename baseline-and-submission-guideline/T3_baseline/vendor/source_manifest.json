@@ -1,0 +1,13 @@
+{
+  "source_directory": "D:\\MICCAI2026\\to_mingyi\\clip_mlp_frame_classifier",
+  "original_sha256": {
+    "model.py": "a3400bc4b883abaeb0e0330ff913c3e5a46545912383ce95b3764abd3169edf9",
+    "dataset.py": "52cb97f8f1107d171d5544626000c5a38af6ee9970684686034ac6cd9ab847e5",
+    "labels.py": "bd35bb5824767a63c4867c49274fb5fc9f011eba32e7e02bcaac44afb4a4e562",
+    "predict.py": "de17808c0f8ffe6cf544e1a30e12626b3d464b3913c4dd83f6880c547591c655",
+    "train.py": "e89569567c69d1079f7e06567fc5bc4d9578faa3f23eb76346a64d190b819aa8"
+  },
+  "copied_unchanged": "model.py -> vendor/clip_mlp_model.py",
+  "preprocessing": "Matches dataset.make_transform(image_size=224,training=False)",
+  "labels": "Original 27-class labels are intentionally replaced with current 32-class label_schema.json"
+}

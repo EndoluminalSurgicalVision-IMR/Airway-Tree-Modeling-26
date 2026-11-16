@@ -35,6 +35,47 @@ The branch-wise ACC, F1 and TAcc and the subtree-wise SC and TD are measured on 
 
 **Tree Accuracy (TAcc).** TAcc replaces the 0/1 hit of ACC with a graded score over the same valid branch nodes: each node scores 1 − D(pred, gt) / Dmax, where D is the shortest-path distance between the predicted and the reference class in the anatomical taxonomy (trachea → left/right main bronchus → lobe → segmental branch) and Dmax = 6 is the largest distance in that taxonomy, between segments in opposite lungs. A segment confused with a sibling segment of the same lobe therefore still scores 1 − 2/6 ≈ 0.67, one in another lobe of the same lung 1 − 4/6 ≈ 0.33, and one in the opposite lung 0; background and out-of-scheme labels count as maximally distant. TAcc is the mean of these scores, so it rewards anatomically plausible near-misses rather than only exact agreement, is always ≥ ACC, and equals ACC only when every label is either exact or maximally wrong.
 
+## Track-3: Landmark Recognition for Endobronchial Intervention
+
+Track 3 predicts one anatomical landmark per bronchoscopy frame, using the
+fixed 32-class schema shipped as `label_schema.json` in every algorithm
+directory. The illustrated label guide is on the challenge website:
+<https://journey1234-liu.github.io/atm26/#/tracks>.
+The final ranking is the **mean rank position** across the following four
+metrics (each ranked independently; ties receive the average rank):
+
+1. **Frame Macro-F1** — macro-averaged F1 over the fixed 32-class schema, so a
+   class absent from a sequence still counts against the score. This prevents
+   ignoring rare landmarks.
+2. **Frame Accuracy** — the fraction of frames whose predicted label matches
+   the reference.
+3. **Sequence Edit Score** — the segmental edit score: the predicted label
+   sequence is compressed into segments and compared with the reference
+   segment sequence, penalising missing segments, extra segments, wrong order
+   and wrong labels.
+4. **Segmental F1@50** — segment-level F1 after matching predicted and
+   reference segments with temporal IoU ≥ 0.5.
+
+The implementation of all four metrics, with the per-metric definitions and
+edge cases, is in [`T3_evaluation/`](T3_evaluation/): `evaluate.py` is the
+official entry point and `SCORING.md` documents the scoring protocol.
+
+The scorer runs on the host in plain Python (no evaluation Docker, no extra
+packages) and reads the predictions plus the private ground truth:
+
+```bash
+python evaluate.py --predictions-root /path/to/docker_output \
+  --gt-root /path/to/private_gt --output-root /path/to/scores
+python rank.py --reports /path/to/trusted_reports --output /path/to/leaderboard
+```
+
+Validation and test use the same command with different host paths. The four
+host paths in `paths.example.json` can be edited directly; `/input` and
+`/output` inside the container are a fixed interface, not host paths.
+`prepare_data.py` prepares the existing ATM data, and `run_submission.py` /
+`run_from_config.py` are optional host-side Docker wrappers for local end-to-end
+runs; the submission itself is only the image.
+
 ## References
 
 [1] Shit S, Paetzold J C, Sekuboyina A, et al. clDice — a novel topology-preserving loss function for tubular structure segmentation[C]. CVPR, 2021: 16560-16569.

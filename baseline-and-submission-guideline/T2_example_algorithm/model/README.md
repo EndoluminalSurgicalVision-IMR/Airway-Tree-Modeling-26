@@ -1,3 +1,3 @@
-You can upload your method's model separately from the container image as a tarball (.tar.gz) on Grand Challenge (Your algorithm > Models).
-
-If provided, the tarball will be extracted to `/opt/ml/model/` at runtime.
+version https://git-lfs.github.com/spec/v1
+oid sha256:3f4a9b7f39948fd713513d8112d8e9c70fcf3cf6d9ca8a37843192d9c63bdacd
+size 216

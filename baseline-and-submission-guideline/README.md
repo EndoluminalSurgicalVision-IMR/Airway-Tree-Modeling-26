@@ -48,6 +48,84 @@ To build and save the docker, you can run:
 cd baseline-and-submission-guideline/T2_baseline
 bash do_save.sh
 ```
+### Track-3: Landmark Recognition for Endobronchial Intervention
+Track 3 moves from CT volumes to the endobronchial view. A case is a rendered
+bronchoscopy sequence along the airway tree, and every frame carries the
+anatomical landmark visible at that moment. Participants submit **one
+self-contained inference container** that reads PNG sequences and writes a
+per-frame label CSV. The container runs offline and only writes the CSV files;
+the predictions are then scored on the host with the official scorer.
+
+An example algorithm for Track-3 can be found under `T3_example_algorithm`. It
+is standard-library only, writes the constant label 0, and defines the I/O
+interface for reading PNG sequences and writing frame-label CSVs.
+
+The corresponding baseline algorithm for Track-3 can be found under
+`T3_baseline`: a CLIP+MLP model that processes exactly one sequence per run. The
+same model repackaged with the batch contract is in
+`T3_baseline_finaltest_batch`: it loads the checkpoint once and predicts the
+whole split sequentially, releasing the per-sequence tensors between runs.
+
+The participant batch template is `finaltest_batch_template_track3`. It is a
+skeleton with a small JSON placeholder: replace `build_predictor` and
+`predict_case` with your own method, keep the I/O paths and the label schema. It
+is not another official baseline.
+
+The baseline checkpoint is published on Hugging Face together with the
+Track 1 and Track 2 baselines:
+[Hugging Face](https://huggingface.co/Endoluminal-Surg-Vision-IMR/Airway-Tree-Modeling-26-baselines). Stage it in either baseline directory with
+`download_weights.py`, which fetches the file and verifies the fixed SHA-256
+(`--source` stages an existing local copy instead). See
+[RESOURCES_Track3.md](RESOURCES_Track3.md) for the checksum and the image
+distribution.
+
+Please carefully configure the `Dockerfile` before docker image saving and
+testing. Track-3 images must declare `LABEL org.atm26.batch="1"` and
+`LABEL org.grand-challenge.api-method="exec"`, and must run as a non-root user
+(`USER app`); the platform rejects an image that runs as root. The example and
+the template already end with `USER app`.
+
+To build and test the docker, you can run:
+```bash
+cd baseline-and-submission-guideline/T3_baseline
+bash do_build.sh
+DEVICE=cuda bash do_test_run.sh /absolute/input_root /absolute/empty_output_root
+```
+
+Use `DEVICE=cpu` for a CPU-only smoke test, and use `T3_baseline_finaltest_batch`
+instead of `T3_baseline` to test the batch packaging. No container arguments are
+required.
+
+To build and save the docker, you can run:
+```bash
+cd baseline-and-submission-guideline/T3_baseline
+bash do_save.sh /absolute/submission.tar.gz
+```
+
+The four images are tagged `atm26-track3-example:v3`, `atm26-track3-baseline:v3`,
+`atm26-track3-baseline-batch:v3` and `atm26-track3-template:v3`.
+
+**Labels.** Predictions use the fixed 32-class schema (13 proximal and 19
+segmental classes) shipped as `label_schema.json` in every algorithm directory:
+ID `0` is a real class (LB1+2), not background, and ID `18` is unused. The
+illustrated label guide is published on the challenge website:
+<https://journey1234-liu.github.io/atm26/#/tracks>.
+
+**Container contract** (Track 3 has its own I/O paths — not the CT ones):
+
+- Input: `/input/sequences/<sequence-id>/000000.png … 000200.png` (201 frames,
+  read-only). The container receives all sequences of the split in one run; load
+  the model once and loop over the sequences.
+- Output: `/output/predictions/<sequence-id>.csv`, header `filename,label`, one
+  row per input frame in numeric order, values from the 32-class schema, exactly
+  one CSV per sequence.
+- No network access, no command-line arguments.
+
+The same image serves the validation and test splits; only the mounted paths
+differ. The official scorer is in
+[`evaluation/T3_evaluation/`](../evaluation/T3_evaluation/) and the metrics are
+documented in [../evaluation/README.md](../evaluation/README.md).
+
 ### Batch execution (Validation & Final Test phases)
 
 The batch contract below applies to **both the Validation Phase and the Final Test

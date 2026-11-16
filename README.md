@@ -22,7 +22,7 @@ The evaluation code can be found in [Evaluation](evaluation/README.md).
 ## TODOs
 - [x] Upload baseline weights and nnUNet docker image
 - [x] Prepare evaluation README
-- [ ] Prepare the release of Track-3
+- [x] Prepare the release of Track-3
 
 ## Citation
 If using this dataset, you must cite the papers:

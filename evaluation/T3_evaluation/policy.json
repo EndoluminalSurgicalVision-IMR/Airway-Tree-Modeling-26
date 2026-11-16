@@ -1,0 +1,16 @@
+{
+  "version": "track3-ranking-v1",
+  "status": "official_implementation",
+  "ranking_method": "mean_metric_rank",
+  "metrics": ["frame_macro_f1", "frame_accuracy", "sequence_edit", "segment_f1_50"],
+  "directions": ["higher", "higher", "higher", "higher"],
+  "metric_rank_ties": "average_positions",
+  "final_rank_ties": "shared_competition_rank",
+  "rounding_decimals_for_ties": 12,
+  "frame_aggregation": "pool_all_frames; macro_f1 averages the fixed 32 labels with zero-division=0",
+  "temporal_aggregation": "mean within each patient, then equal mean over patients",
+  "segment_iou_threshold": 0.5,
+  "invalid_submission": "reject_entire_submission; exclude_from_ranking",
+  "transition_errors": "diagnostic_only; require reviewed topology; otherwise null",
+  "platform_publication": "host_scoring_ready; local_platform_path_configuration_and_rehearsal_pending"
+}

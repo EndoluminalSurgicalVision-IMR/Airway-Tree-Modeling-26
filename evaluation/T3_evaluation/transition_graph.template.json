@@ -1,0 +1,6 @@
+{
+  "reviewed": false,
+  "directed": false,
+  "edges": [],
+  "note": "Fill verified 32-class adjacency pairs and set reviewed=true only after anatomical review. Self transitions are automatically allowed. Not a ranking metric."
+}

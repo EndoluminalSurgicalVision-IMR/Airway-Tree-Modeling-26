@@ -1,0 +1,10 @@
+{
+  "image": "atm26-track3-baseline-batch:v3",
+  "docker": "docker",
+  "device": "cuda",
+  "timeout": 21600,
+  "input_root": "D:/EDIT_ME/valid_input",
+  "predictions_root": "D:/EDIT_ME/valid_predictions",
+  "gt_root": "D:/EDIT_ME/valid_gt",
+  "metrics_root": "D:/EDIT_ME/valid_scores"
+}
