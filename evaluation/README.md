@@ -40,3 +40,26 @@ The branch-wise ACC, F1 and TAcc and the subtree-wise SC and TD are measured on 
 [1] Shit S, Paetzold J C, Sekuboyina A, et al. clDice — a novel topology-preserving loss function for tubular structure segmentation[C]. CVPR, 2021: 16560-16569.
 
 [2] Li C, Zhang M, Zhang C, Gu Y. Reflecting topology consistency and abnormality via learnable attentions for airway labeling[J]. International Journal of Computer Assisted Radiology and Surgery, 2025, 20(7): 1315-1323.
+
+## Track-3: Landmark Recognition for Endobronchial Intervention
+
+Track 3 predicts one anatomical landmark per bronchoscopy frame (32 classes,
+see [../baseline-and-submission-guideline/Track3_Label_Guide.md](../baseline-and-submission-guideline/Track3_Label_Guide.md)).
+The final ranking is the **mean rank position** across the following four
+metrics (each ranked independently; ties receive the average rank):
+
+1. **Frame Macro-F1** — macro-averaged F1 over the fixed 32-class schema, so a
+   class absent from a sequence still counts against the score. This prevents
+   ignoring rare landmarks.
+2. **Frame Accuracy** — the fraction of frames whose predicted label matches
+   the reference.
+3. **Sequence Edit Score** — the segmental edit score: the predicted label
+   sequence is compressed into segments and compared with the reference
+   segment sequence, penalising missing segments, extra segments, wrong order
+   and wrong labels.
+4. **Segmental F1@50** — segment-level F1 after matching predicted and
+   reference segments with temporal IoU ≥ 0.5.
+
+The implementation of all four metrics, with the per-metric definitions and
+edge cases, is in [`T3_evaluation/`](T3_evaluation/) — `evaluate.py` is the
+official entry point, and `SCORING.md` documents the scoring protocol.

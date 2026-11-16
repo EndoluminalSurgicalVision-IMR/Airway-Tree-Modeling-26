@@ -19,10 +19,19 @@ We provide a baseline model and a detailed docker tutorial. Please refer to [Bas
 ### Evaluation
 The evaluation code can be found in [Evaluation](evaluation/README.md).
 
+### Track-3: Landmark Recognition for Endobronchial Intervention
+Track 3 classifies each frame of a rendered bronchoscopy sequence into one of
+32 airway landmarks. The example algorithm, the official CLIP+MLP baseline, the
+batch variant and a participant template are under
+[Baseline and Submission Guideline](baseline-and-submission-guideline/README.md#track-3-landmark-recognition-for-endobronchial-intervention),
+with the 32-class [label guide](baseline-and-submission-guideline/Track3_Label_Guide.md)
+and the [weight/image distribution notes](baseline-and-submission-guideline/RESOURCES_Track3.md).
+The official scorer is in [Evaluation](evaluation/README.md#track-3-landmark-recognition-for-endobronchial-intervention).
+
 ## TODOs
 - [x] Upload baseline weights and nnUNet docker image
 - [x] Prepare evaluation README
-- [ ] Prepare the release of Track-3
+- [x] Prepare the release of Track-3
 
 ## Citation
 If using this dataset, you must cite the papers:

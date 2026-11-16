@@ -1,2 +1,12 @@
 **/__pycache__/**
 *vscode/
+distribution/
+verification/local/
+**/resources/**/*.pt
+**/resources/**/*.tar.gz
+**/test/input/
+**/test/output/
+__pycache__/
+*.pyc
+**/Dockerfile.local
+*.log

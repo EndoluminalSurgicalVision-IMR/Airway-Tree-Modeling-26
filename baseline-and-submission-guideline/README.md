@@ -48,6 +48,50 @@ To build and save the docker, you can run:
 cd baseline-and-submission-guideline/T2_baseline
 bash do_save.sh
 ```
+### Track-3: Landmark Recognition for Endobronchial Intervention
+Track 3 moves from CT volumes to the endobronchial view. A case is a rendered
+bronchoscopy sequence along the airway tree, and every frame carries the
+anatomical landmark visible at that moment. Participants submit **one
+self-contained inference container** that reads PNG sequences and writes a
+per-frame label CSV; the organizers mount the data, run the container and score
+the predictions on the host.
+
+| Directory | Role |
+| --- | --- |
+| `T3_example_algorithm/` | constant-label teaching example (standard library only, no GPU) |
+| `T3_baseline/` | official CLIP+MLP baseline, one sequence per run |
+| `T3_baseline_finaltest_batch/` | the same baseline with the batch contract (model loaded once) |
+| `finaltest_batch_template_track3/` | participant batch-template skeleton to drop your own model into |
+
+Weights are not committed; each baseline stages them with `download_weights.py`,
+which verifies the fixed SHA-256. See [RESOURCES_Track3.md](RESOURCES_Track3.md).
+
+**Label guide.** The task uses 32 classes: 13 proximal airway classes and 19
+segmental classes, defined in [assets/label_schema.json](assets/label_schema.json)
+and illustrated in [Track3_Label_Guide.md](Track3_Label_Guide.md). ID `0` is a
+real class (LB1+2), not background; ID `18` is unused; a segment label is the
+union of all annotated branches of that segment; anatomical variation may leave
+a class absent in a case but never adds a class.
+
+![All 32 airway labels](assets/airway_all_labels.png)
+
+**Container contract** (Track 3 has its own I/O paths — not the CT ones):
+
+- `LABEL org.atm26.batch="1"` and `LABEL org.grand-challenge.api-method="exec"`
+  are required, and the image must run as a **non-root** user.
+- Input: `/input/sequences/<sequence-id>/000000.png … 000200.png` (201 frames,
+  read-only). The container receives all sequences of the split in one run; load
+  the model once and loop over the sequences.
+- Output: `/output/predictions/<sequence-id>.csv`, header `filename,label`, one
+  row per input frame in numeric order, values from the 32-class schema, exactly
+  one CSV per sequence.
+- No network access, no command-line arguments.
+
+The same image serves the validation and test splits; only the mounted paths
+differ. The official scorer is in
+[`evaluation/T3_evaluation/`](../evaluation/T3_evaluation/) and the metrics are
+documented in [../evaluation/README.md](../evaluation/README.md).
+
 ### Batch execution (Validation & Final Test phases)
 
 The batch contract below applies to **both the Validation Phase and the Final Test

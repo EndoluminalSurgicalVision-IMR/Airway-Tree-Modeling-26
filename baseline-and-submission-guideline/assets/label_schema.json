@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "source": "Current UAE/datasets final labels.csv; anatomical definitions from annotation_source_README.txt",
+  "labels": [
+    {
+      "id": 0,
+      "name": "LB1+2"
+    },
+    {
+      "id": 1,
+      "name": "LB3"
+    },
+    {
+      "id": 2,
+      "name": "LB4"
+    },
+    {
+      "id": 3,
+      "name": "LB5"
+    },
+    {
+      "id": 4,
+      "name": "LB6"
+    },
+    {
+      "id": 5,
+      "name": "LB8"
+    },
+    {
+      "id": 6,
+      "name": "LB9"
+    },
+    {
+      "id": 7,
+      "name": "LB10"
+    },
+    {
+      "id": 8,
+      "name": "RB1"
+    },
+    {
+      "id": 9,
+      "name": "RB2"
+    },
+    {
+      "id": 10,
+      "name": "RB3"
+    },
+    {
+      "id": 11,
+      "name": "RB4"
+    },
+    {
+      "id": 12,
+      "name": "RB5"
+    },
+    {
+      "id": 13,
+      "name": "RB6"
+    },
+    {
+      "id": 14,
+      "name": "RB7"
+    },
+    {
+      "id": 15,
+      "name": "RB8"
+    },
+    {
+      "id": 16,
+      "name": "RB9"
+    },
+    {
+      "id": 17,
+      "name": "RB10"
+    },
+    {
+      "id": 19,
+      "name": "LB7"
+    },
+    {
+      "id": 100,
+      "name": "trachea"
+    },
+    {
+      "id": 101,
+      "name": "Left main"
+    },
+    {
+      "id": 102,
+      "name": "Right main"
+    },
+    {
+      "id": 107,
+      "name": "Left Upper"
+    },
+    {
+      "id": 108,
+      "name": "Left Lower"
+    },
+    {
+      "id": 109,
+      "name": "Right Upper"
+    },
+    {
+      "id": 110,
+      "name": "Right Middle"
+    },
+    {
+      "id": 111,
+      "name": "Right Lower"
+    },
+    {
+      "id": 112,
+      "name": "Bronchus intermedius"
+    },
+    {
+      "id": 113,
+      "name": "Left upper division"
+    },
+    {
+      "id": 114,
+      "name": "Lingular"
+    },
+    {
+      "id": 115,
+      "name": "Right basal trunk"
+    },
+    {
+      "id": 116,
+      "name": "Left basal trunk"
+    }
+  ]
+}
