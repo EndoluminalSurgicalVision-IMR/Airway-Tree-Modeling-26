@@ -1,58 +1,103 @@
-# Track 3 评分与排名规则 v1
+# Track 3 scoring and ranking rules v1
 
-本版按主办方要求采用多个指标的平均名次。以下四项已实现为宿主 Python 评分，完成 valid/test 双路径小样本验证及既有完整测试预测的评分回归。
-机器可读规则见 [policy.json](policy.json)，标签集合见 [label_schema.json](label_schema.json)。
+As requested by the organizers, this version ranks submissions by the mean rank
+over several metrics. The four metrics below are implemented as host-side Python
+scoring; they were validated on small samples of both the validation and test
+paths, and regression-checked against the existing full-test predictions.
+The machine-readable policy is in [policy.json](policy.json); the label set is
+in [label_schema.json](label_schema.json).
 
-| 排名指标 | 衡量什么 | 计算与聚合 | 方向 |
+| Ranking metric | What it measures | Computation and aggregation | Direction |
 | --- | --- | --- | --- |
-| `frame_macro_f1` | 各解剖类别的识别能力 | 全部帧汇总混淆矩阵，固定 32 类 F1 的算术平均 | 越高越好 |
-| `frame_accuracy` | 总体逐帧正确率 | 全部正确帧数 / 全部帧数 | 越高越好 |
-| `sequence_edit` | 解剖标签的出现顺序与多余跳变 | 每段序列计算压缩标签的编辑得分，病例内平均，再病例等权平均 | 越高越好 |
-| `segment_f1_50` | 连续标签片段的完整性和时间范围 | 每段序列计算 IoU≥0.5 的片段 F1，病例内平均，再病例等权平均 | 越高越好 |
+| `frame_macro_f1` | recognition quality per anatomical class | confusion matrix pooled over all frames; arithmetic mean of the fixed 32-class F1 | higher is better |
+| `frame_accuracy` | overall per-frame correctness | correct frames / all frames | higher is better |
+| `sequence_edit` | order of the anatomical labels and spurious transitions | per-sequence edit score of the compressed label runs; averaged within a case, then equally over cases | higher is better |
+| `segment_f1_50` | completeness and temporal extent of contiguous label segments | per-sequence segment F1 at IoU ≥ 0.5; averaged within a case, then equally over cases | higher is better |
 
-所有得分存为 0～1，可乘 100 展示。病例等权聚合只用于后两项；前两项全帧汇总，保持逐帧准确率的直接含义。
+All scores are stored in 0–1 and may be displayed ×100. Case-equal aggregation
+applies only to the last two metrics; the first two are pooled over all frames,
+keeping the direct meaning of frame accuracy.
 
-## 逐帧计算
+## Per-frame computation
 
-对类别 c，`F1_c = 2 TP_c / (2 TP_c + FP_c + FN_c)`。分母为零时记 0。
-主榜 macro-F1 始终除以固定的 32，不随参赛者预测或当前样本中出现的类别改变。
-小 demo 未覆盖全部类别时，即使所有帧正确，固定 32 类 macro-F1 也可能小于 1；不要拿小 demo 分数当完整测试成绩。
-辅助结果同时报告仅真值出现类别的 macro-F1、balanced accuracy、weighted-F1、逐类支持度和混淆矩阵。
-训练时选择 best checkpoint 使用 `macro_f1_present`；完整验证集包含全部 32 类，两种 macro-F1 相等。
+For class c, `F1_c = 2 TP_c / (2 TP_c + FP_c + FN_c)`. A zero denominator is
+recorded as 0.
+The leaderboard macro-F1 always divides by the fixed 32, independent of which
+classes the participant predicted or appear in the current sample.
+On a small demo that does not cover all classes, even a prediction that is
+correct on every frame can score below 1 for the fixed 32-class macro-F1; a demo
+score is not a full-test score.
+Auxiliary results also report macro-F1 over the classes present in the ground
+truth only, balanced accuracy, weighted-F1, per-class support and the confusion
+matrix.
+Checkpoint selection during training used `macro_f1_present`; the full
+validation set contains all 32 classes, where both macro-F1 values are equal.
 
-## 序列编辑得分
+## Sequence edit score
 
-先把相邻重复标签合并。例如真值 `100,100,101,101,0,0` 压缩为 `100,101,0`。
-预测 `100,101,100,101,0` 增加了两个多余片段，其编辑得分为 `1 - 2/5 = 0.6`。
-公式为 `1 - Levenshtein(reference_runs, prediction_runs) / max(reference_run_count, prediction_run_count)`。
-替换、插入、删除的代价均为 1。只衡量片段顺序，不要求预测使用任何特定时序模型。
+Adjacent duplicate labels are merged first. For example, the ground truth
+`100,100,101,101,0,0` compresses to `100,101,0`.
+The prediction `100,101,100,101,0` adds two extra segments, so its edit score is
+`1 - 2/5 = 0.6`.
+The formula is `1 - Levenshtein(reference_runs, prediction_runs) / max(reference_run_count, prediction_run_count)`.
+Substitutions, insertions and deletions all cost 1. It measures segment order
+only and does not require any particular temporal model.
 
-## 片段 F1@50
+## Segment F1@50
 
-相邻同类帧构成片段，采用左闭右开的帧索引区间。每个预测片段按时间顺序，与同类真值片段中 IoU 最高者匹配；IoU 相等时取最早的真值片段。
-IoU≥0.5 且该真值片段尚未被匹配，计为 TP，否则计为 FP；未匹配真值片段计为 FN。
-`F1@50 = 2 TP / (2 TP + FP + FN)`。每个真值片段最多匹配一次；不排除任何背景类，因为本任务没有背景标签。
-这项会惩罚把一个真实连续片段切成多个预测片段；编辑得分同时约束标签顺序。单纯减少跳变次数不会自动得到高分。
-两项属于常用时序分割指标，定义参考 [MS-TCN, CVPR 2019](https://openaccess.thecvf.com/content_CVPR_2019/papers/Abu_Farha_MS-TCN_Multi-Stage_Temporal_Convolutional_Network_for_Action_Segmentation_CVPR_2019_paper.pdf)。
+Adjacent frames of the same class form a segment, using half-open frame
+intervals. Each predicted segment is matched, in temporal order, with the
+ground-truth segment of the same class that has the highest IoU; ties go to the
+earliest ground-truth segment.
+IoU ≥ 0.5 with an as-yet unmatched ground-truth segment counts as TP, otherwise
+as FP; unmatched ground-truth segments count as FN.
+`F1@50 = 2 TP / (2 TP + FP + FN)`. Each ground-truth segment is matched at most
+once; no background class is excluded because this task has no background label.
+This metric penalises splitting one real segment into several predicted
+segments; the edit score constrains label order at the same time. Merely
+reducing the number of transitions does not automatically yield a high score.
+Both are common temporal-segmentation metrics; the definitions follow
+[MS-TCN, CVPR 2019](https://openaccess.thecvf.com/content_CVPR_2019/papers/Abu_Farha_MS-TCN_Multi-Stage_Temporal_Convolutional_Network_for_Action_Segmentation_CVPR_2019_paper.pdf).
 
-## 排名与并列
+## Ranking and ties
 
-1. 对所有有效参赛提交，分别按四项指标降序排序。
-2. 单项得分先保留 12 位小数用于判定并列，并列占据名次的平均位置。例如两个并列第一各得 1.5，下一名为 3。
-3. 四个单项名次等权平均，平均名次越小越好。这里平均的是名次，不是四个原始分数。
-4. 最终平均名次相同则共享最终名次，采用 `1,1,3`。提交 ID 只用于稳定展示顺序。
-5. 新增参赛者后，需要对全部有效提交重新计算平均名次。不得直接把来自不同比赛阶段或不同测试集的报告混排。
+1. Rank all valid submissions separately by each of the four metrics, descending.
+2. Per-metric scores are rounded to 12 decimals to decide ties; tied entries
+   occupy the average of the positions. For example, two tied first places each
+   score 1.5 and the next entry is 3.
+3. The four per-metric ranks are averaged with equal weight; a lower mean rank
+   is better. Ranks are averaged, not the four raw scores.
+4. Equal final mean ranks share the final rank, e.g. `1,1,3`. Submission IDs only
+   stabilise the display order.
+5. Whenever a participant is added, the mean ranks of all valid submissions must
+   be recomputed. Reports from different challenge phases or different test sets
+   must never be mixed.
 
-排行榜只读取主办方宿主评分脚本生成的可信 JSON，不读取参赛者自行填写的指标。valid 和 test 分别汇总排名，不混用报告。
+The leaderboard only reads trusted JSON produced by the organizers' host scoring
+script, never metrics entered by participants. Validation and test are ranked
+separately and their reports are never mixed.
 
-## 输出错误与辅助诊断
+## Output errors and auxiliary diagnostics
 
-漏序列、漏帧、多帧、重复帧、额外文件、非法类别、行顺序错误或 CSV 格式错误，均判该次提交无效，整次排除排名。
-不补零、不跳过坏帧、不仅对成功病例评分。`0=LB1+2`，是正常类别；`18` 未使用。
+A missing sequence, missing frame, extra frame, duplicate frame, extra file,
+illegal class, wrong row order or malformed CSV invalidates the whole submission
+and excludes it from the ranking.
+No zero-filling, no skipping bad frames, no scoring of only the successful
+cases. `0=LB1+2` is a normal class; `18` is unused.
 
-评测报告保留逐序列、逐病例指标和预测/真值跳变次数，不直接把“越少跳变越好”作为排名规则。
-非法转移计数需要主办方审核后的连接图；未提供时为 `null`，不是 0。模板 `transition_graph.template.json` 默认 `reviewed=false`，不能直接启用。
-审核需考虑 32 类标签、前进/后退运动及边界漏标；该诊断目前不参与排名。
+The evaluation report keeps per-sequence and per-case metrics plus the number of
+prediction/ground-truth transitions; "fewer transitions is better" is not a
+ranking rule. Counting illegal transitions needs an organizer-reviewed
+connectivity graph; when it is absent the count is `null`, not 0. The template
+`transition_graph.template.json` defaults to `reviewed=false` and must not be
+enabled as is.
+The review must consider the 32 classes, forward/backward motion and missing
+annotations at boundaries; this diagnostic does not participate in ranking.
 
-评测器保持预测原样，不执行平滑、Viterbi 或利用真值修正预测。基线采用独立逐帧 CLIP+MLP；该基线选择不构成对所有参赛方法的限制。
-当前接口提供完整序列，因此可以访问后续帧；如正式任务要评估严格在线预测，还需独立定义因果输入、接口和评测方式，不能只通过当前整段输出推断是否在线。
+The evaluator leaves predictions untouched: no smoothing, no Viterbi, no
+ground-truth-guided correction. The baseline uses an independent per-frame
+CLIP+MLP; that choice does not constrain the methods participants may use.
+The current interface provides whole sequences, so future frames are visible;
+evaluating strictly online prediction would require a separately defined causal
+input, interface and metric, and cannot be inferred from the whole-sequence
+output.

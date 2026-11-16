@@ -78,7 +78,9 @@ a class absent in a case but never adds a class.
 **Container contract** (Track 3 has its own I/O paths — not the CT ones):
 
 - `LABEL org.atm26.batch="1"` and `LABEL org.grand-challenge.api-method="exec"`
-  are required, and the image must run as a **non-root** user.
+  are required, and the image must run as a **non-root** user. The template and
+  the example already end with `USER app`; if you start from another base image,
+  add a non-root user — the platform rejects an image that runs as root.
 - Input: `/input/sequences/<sequence-id>/000000.png … 000200.png` (201 frames,
   read-only). The container receives all sequences of the split in one run; load
   the model once and loop over the sequences.

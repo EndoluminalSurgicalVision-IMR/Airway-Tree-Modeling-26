@@ -35,12 +35,6 @@ The branch-wise ACC, F1 and TAcc and the subtree-wise SC and TD are measured on 
 
 **Tree Accuracy (TAcc).** TAcc replaces the 0/1 hit of ACC with a graded score over the same valid branch nodes: each node scores 1 − D(pred, gt) / Dmax, where D is the shortest-path distance between the predicted and the reference class in the anatomical taxonomy (trachea → left/right main bronchus → lobe → segmental branch) and Dmax = 6 is the largest distance in that taxonomy, between segments in opposite lungs. A segment confused with a sibling segment of the same lobe therefore still scores 1 − 2/6 ≈ 0.67, one in another lobe of the same lung 1 − 4/6 ≈ 0.33, and one in the opposite lung 0; background and out-of-scheme labels count as maximally distant. TAcc is the mean of these scores, so it rewards anatomically plausible near-misses rather than only exact agreement, is always ≥ ACC, and equals ACC only when every label is either exact or maximally wrong.
 
-## References
-
-[1] Shit S, Paetzold J C, Sekuboyina A, et al. clDice — a novel topology-preserving loss function for tubular structure segmentation[C]. CVPR, 2021: 16560-16569.
-
-[2] Li C, Zhang M, Zhang C, Gu Y. Reflecting topology consistency and abnormality via learnable attentions for airway labeling[J]. International Journal of Computer Assisted Radiology and Surgery, 2025, 20(7): 1315-1323.
-
 ## Track-3: Landmark Recognition for Endobronchial Intervention
 
 Track 3 predicts one anatomical landmark per bronchoscopy frame (32 classes,
@@ -63,3 +57,9 @@ metrics (each ranked independently; ties receive the average rank):
 The implementation of all four metrics, with the per-metric definitions and
 edge cases, is in [`T3_evaluation/`](T3_evaluation/) — `evaluate.py` is the
 official entry point, and `SCORING.md` documents the scoring protocol.
+
+## References
+
+[1] Shit S, Paetzold J C, Sekuboyina A, et al. clDice — a novel topology-preserving loss function for tubular structure segmentation[C]. CVPR, 2021: 16560-16569.
+
+[2] Li C, Zhang M, Zhang C, Gu Y. Reflecting topology consistency and abnormality via learnable attentions for airway labeling[J]. International Journal of Computer Assisted Radiology and Surgery, 2025, 20(7): 1315-1323.

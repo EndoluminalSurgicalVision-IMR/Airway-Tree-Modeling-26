@@ -12,6 +12,10 @@ DEVICE=cuda bash do_test_run.sh /absolute/input_root /absolute/empty_output_root
 bash do_save.sh /absolute/submission.tar.gz
 ```
 
+The Dockerfile ends with `USER app`: the evaluation platform rejects an image
+that runs as root. If you replace the base image or rewrite the Dockerfile, keep
+a non-root user.
+
 Image: `atm26-track3-example:v3`. No container arguments are required. Use DEVICE=cpu for a CPU-only smoke test.
 
 See [root README](../../README.md) and [resources](../RESOURCES_Track3.md).
